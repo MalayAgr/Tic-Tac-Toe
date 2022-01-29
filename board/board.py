@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import namedtuple
 from enum import Enum
+from typing import NamedTuple
 
 from rich import box
 from rich.console import RenderableType
@@ -9,13 +10,16 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-_Marker = namedtuple("marker", ["emoji", "background"])
+
+class _Marker(NamedTuple):
+    emoji: str
+    background: str = ""
 
 
 class Marker(Enum):
-    CROSS = _Marker("\N{CROSS MARK}", "green")
-    NOUGHT = _Marker("\N{HEAVY LARGE CIRCLE}", "yellow")
-    EMPTY = _Marker("\N{BLACK QUESTION MARK ORNAMENT}", "")
+    CROSS = _Marker("\N{CROSS MARK}", "purple3")
+    NOUGHT = _Marker("\N{HEAVY LARGE CIRCLE}", "navy_blue")
+    EMPTY = _Marker("\N{BLACK QUESTION MARK ORNAMENT}")
 
 
 class Cell:
