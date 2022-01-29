@@ -13,9 +13,9 @@ _Marker = namedtuple("marker", ["emoji", "background"])
 
 
 class Marker(Enum):
-    CROSS = _Marker("\u274C", "green")
-    NOUGHT = _Marker("\u2B55", "yellow")
-    EMPTY = _Marker("\u2753", "")
+    CROSS = _Marker("\N{CROSS MARK}", "green")
+    NOUGHT = _Marker("\N{HEAVY LARGE CIRCLE}", "yellow")
+    EMPTY = _Marker("\N{BLACK QUESTION MARK ORNAMENT}", "")
 
 
 class Cell:
