@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import itertools
 import random
 
 from rich.console import RenderableType
@@ -16,6 +17,10 @@ def _print_centered(text: RenderableType) -> None:
 
 
 class Game:
+    win_msg = "[bold]Congratulations![/bold] You are the [green]winner[/green], [bold]{}![/bold] :smiley:"
+    draw_msg = "[red]It's a draw! :disappointed:[/red]"
+    turn_msg = "[green]It's your turn, [bold]{}[/bold] ({})"
+
     def __init__(self, players: list[str], board_size: int = 3) -> None:
         self.board_size = board_size
         self.board = Board(size=board_size)
@@ -29,16 +34,25 @@ class Game:
     def play(self):
         players, turn = self.players, self.turn
         while True:
+            player, marker = players[turn].title(), MARKER_MAP[turn]
+
+            _print_centered(self.turn_msg.format(player, marker.emoji))
             _print_centered(self.board)
 
-            player, marker = players[turn], MARKER_MAP[turn]
-
-            row, col = self._ask_cell(players[turn])
+            row, col = self._ask_cell(players[turn], marker)
 
             self.board.update_cell(row, col, marker)
 
             if self._check_winner(marker) is True:
-                _print_centered(f"Congratulations! You are the winner, {player}!")
+                console.rule()
+                _print_centered(self.board)
+                _print_centered(self.win_msg.format(player))
+                break
+
+            if self._check_draw():
+                console.rule()
+                _print_centered(self.board)
+                _print_centered(self.draw_msg)
                 break
 
             turn = (turn + 1) % 2
@@ -47,7 +61,12 @@ class Game:
     def reset(self):
         self.player = self._players.copy()
         self.turn = 0
-        self.board = Board(size=self.board_size)
+        board_size = IntPrompt.ask(
+            "Leave blank for previous board size or enter a new one",
+            default=self.board_size,
+        )
+        self.board_size = board_size
+        self.board = Board(size=board_size)
 
     def _check_winner(self, marker: Marker):
         return any(
@@ -55,9 +74,12 @@ class Game:
             for positions in self.board.winning_positions
         )
 
-    def _ask_cell(self, player: str) -> tuple[int, int]:
-        _print_centered(f"[green]It's your turn, {player.title()}")
+    def _check_draw(self):
+        conflict = {Marker.CROSS, Marker.NOUGHT}
+        b = self.board
+        return b.is_full() or all(conflict.issubset(pos) for pos in b.winning_positions)
 
+    def _ask_cell(self, player: str, marker: Marker) -> tuple[int, int]:
         maximum = self.board_size - 1
         msg = (
             "[prompt.invalid]Please make sure the {}"
@@ -74,7 +96,7 @@ class Game:
             break
 
         while True:
-            col = IntPrompt.ask("Enter the column of the cell you want to mark")
+            col = IntPrompt.ask("Enter the column")
 
             if not 0 <= col <= maximum:
                 console.print(msg.format("col"))
