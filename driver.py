@@ -10,7 +10,7 @@ def main():
     try:
         player_1 = Prompt.ask("Enter name of first player", default="player 1")
         player_2 = Prompt.ask("Enter name of second player", default="player 2")
-        size = IntPrompt.ask("Enter the size of the board. Leave b", default=3)
+        size = IntPrompt.ask("Enter the size of the board", default=3)
 
         input("Press ENTER to start playing.")
         console.clear()
