@@ -24,7 +24,6 @@ class Game:
     def __init__(self, players: list[str], board_size: int = 3) -> None:
         self.board_size = board_size
         self.board = Board(size=board_size)
-        self.turn: int = 0
         self._players = players
         self.players = self._players.copy()
 
@@ -32,7 +31,7 @@ class Game:
         random.shuffle(self.players)
 
     def play(self):
-        players, turn = self.players, self.turn
+        players, turn = self.players, 0
         while True:
             player, marker = players[turn].title(), MARKER_MAP[turn]
 
@@ -60,7 +59,6 @@ class Game:
 
     def reset(self):
         self.player = self._players.copy()
-        self.turn = 0
         board_size = IntPrompt.ask(
             "Leave blank for previous board size or enter a new one",
             default=self.board_size,
