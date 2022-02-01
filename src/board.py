@@ -22,6 +22,10 @@ class Marker(Enum):
     NOUGHT = _Marker("\N{HEAVY LARGE CIRCLE}", "navy_blue")
     EMPTY = _Marker("\N{BLACK QUESTION MARK ORNAMENT}")
 
+    @property
+    def emoji(self) -> str:
+        return self.value.emoji
+
 
 class Cell:
     def __init__(self, i: int = 0, j: int = 0) -> None:
@@ -71,6 +75,9 @@ class Board:
 
         # Diagonal from top right
         yield [cells[(i, size - 1 - i)].marker for i in range(size)]
+
+    def is_full(self) -> bool:
+        return not any(cell.marker is Marker.EMPTY for cell in self.cells.values())
 
     def __rich__(self) -> RenderableType:
         size, cells = self.size, self.cells
