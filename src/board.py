@@ -18,6 +18,7 @@ class _Marker(NamedTuple):
 
 
 class Marker(Enum):
+    value: _Marker
     CROSS = _Marker("\N{CROSS MARK}", "purple3")
     NOUGHT = _Marker("\N{HEAVY LARGE CIRCLE}", "navy_blue")
     EMPTY = _Marker("\N{BLACK QUESTION MARK ORNAMENT}")
@@ -39,7 +40,7 @@ class Cell:
         return self.__repr__()
 
     def __rich__(self) -> RenderableType:
-        marker: _Marker = self.marker.value
+        marker = self.marker.value
         return Panel(
             Text(marker.emoji, style=f"on {marker.background}", justify="center"),
             box=box.DOUBLE,
@@ -52,7 +53,7 @@ class Board:
         self.size = size
         self.cells = {(i, j): Cell(i, j) for i in range(size) for j in range(size)}
 
-    def update_cell(self, i: int, j: int, marker: Marker):
+    def update_cell(self, i: int, j: int, marker: Marker) -> None:
         cell = self.cells.get((i, j))
         if cell is None:
             raise ValueError("Indices are out of bounds for the board.")
