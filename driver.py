@@ -1,4 +1,3 @@
-from rich.layout import Layout
 from rich.prompt import Confirm, IntPrompt, Prompt
 
 from src.board import Marker
