@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections import Iterator
 from enum import Enum
-from re import L
 from typing import NamedTuple
 
 from rich import box
